@@ -27,7 +27,6 @@ Dit is een POC _(proof of concept)_ project met als doelstelling:
 
 ## Technologie
 Dit project is origineel gebaseerd op de [Quarkus LangChain4j Workshop](https://quarkus.io/quarkus-workshop-langchain4j/) aangeboden door Red Hat en vrij beschikbaar op [GitHub](https://github.com/quarkusio/quarkus-workshop-langchain4j)
- 
 
 Het `quarkus-langchain4j` framework dient als basis voor integratie met een LLM: 
   * `LangChain4j` stelt ons op eenvoudige wijze in staat de LLM op verschillende manieren in te zetten
