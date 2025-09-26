@@ -4,6 +4,9 @@
 * Vereist JDK 21+
 * Vereist Maven 3+
 * Vereist Docker of Podman
+* Vereist een waarde voor de `API_KEY` _environment variable_ voor verbinding met de LLM
+  * Zie gebruik hiervan in [application.properties](src/main/resources/application.properties) 
+  * Bij Mistral (zie hieronder) kan je met een gratis account al aan je eigen API key komen
 
 Applicatie bouwen:
 ```shell
