@@ -24,23 +24,28 @@ public class RagIngestion {
      * Ingests the documents from the given location into the embedding store.
      *
      * @param ev             the startup event to trigger the ingestion when the application starts
-     * @param store          the embedding store the embedding store (PostGreSQL in our case)
+     * @param embeddingStore the embedding store the embedding store (PostGreSQL in our case)
      * @param embeddingModel the embedding model to use for the embedding (BGE-Small-EN-Quantized in our case)
-     * @param documents      the location of the documents to ingest
+     * @param documentsPath  the location of the documents to ingest
      */
-    public void ingest(@Observes StartupEvent ev,
-                       EmbeddingStore store, EmbeddingModel embeddingModel,
-                       @ConfigProperty(name = "rag.location") Path documents) {
-        store.removeAll(); // cleanup the store to start fresh (just for demo purposes)
-        List<Document> list = FileSystemDocumentLoader.loadDocumentsRecursively(documents);
-        EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
-                .embeddingStore(store)
-                .embeddingModel(embeddingModel)
-                .documentSplitter(recursive(100, 25,
-                        new HuggingFaceTokenCountEstimator()))
-                .build();
-        ingestor.ingest(list);
+    public void ingest(@Observes final StartupEvent ev,
+                       final EmbeddingStore embeddingStore,
+                       final EmbeddingModel embeddingModel,
+                       @ConfigProperty(name = "rag.location") final Path documentsPath) {
+        embeddingStore.removeAll(); // cleanup the store to start fresh (just for demo purposes)
+
+        final EmbeddingStoreIngestor ingestor = createIngestor(embeddingStore, embeddingModel);
+        final List<Document> documents = FileSystemDocumentLoader.loadDocumentsRecursively(documentsPath);
+        ingestor.ingest(documents);
+
         Log.info("Documents ingested successfully");
     }
 
+    private EmbeddingStoreIngestor createIngestor(final EmbeddingStore embeddingStore, final EmbeddingModel embeddingModel) {
+        return EmbeddingStoreIngestor.builder()
+                .embeddingStore(embeddingStore)
+                .embeddingModel(embeddingModel)
+                .documentSplitter(recursive(100, 25, new HuggingFaceTokenCountEstimator()))
+                .build();
+    }
 }
